@@ -104,13 +104,6 @@ To contribute:
 3. Commit your changes
 4. Push and create a PR
 
----
-
-## 📄 License
-
-Licensed under the [MIT License](LICENSE).
-
----
 
 ## 👤 Author
 
