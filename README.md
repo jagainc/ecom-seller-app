@@ -5,7 +5,7 @@
 ![GitHub stars](https://img.shields.io/github/stars/jagainc/ecom-seller-app?style=flat-square)
 ![GitHub forks](https://img.shields.io/github/forks/jagainc/ecom-seller-app?style=flat-square)
 
-A modern desktop application for **e-commerce sellers** to manage products, orders, and gain sales insights. Built with **PyQt5 frontend**, **Java Spring Boot backend**, and **JFreeChart** for rich data visualization.
+A modern desktop application for **e-commerce sellers** to manage products, orders, and gain sales insights. Built with **PyQt6 frontend**, **Java Spring Boot backend**, and **JFreeChart** for rich data visualization.
 
 ---
 
