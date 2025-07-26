@@ -50,7 +50,7 @@ A modern desktop application for **e-commerce sellers** to manage products, orde
 * Python 3.8+
 * Java 11+
 * Maven
-* PyQt5 (`pip install pyqt5`)
+* PyQt6 (`pip install pyqt6`)
 * `requests` module (`pip install requests`)
 
 ---
@@ -115,7 +115,7 @@ Licensed under the [MIT License](LICENSE).
 ## 👤 Author
 
 **Jagadeeshwaran**
-📧 [Email](mailto:jagaincdev@gmail.com)
+📧 [Email](mailto:jagadeeshwaranps2005@gmail.com)
 🔗 [GitHub](https://github.com/jagainc)
 
 ---
