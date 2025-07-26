@@ -57,24 +57,23 @@ class MainWindow(QMainWindow):
         header_layout.addWidget(title_label)
 
         # Dark Mode Toggle Button
-        self.dark_mode_toggle = QPushButton("Toggle Dark Mode")
+        self.dark_mode_toggle = QPushButton("☀️")
         self.dark_mode_toggle.setCheckable(True)
+        self.dark_mode_toggle.setFixedSize(40, 40)
         self.dark_mode_toggle.setStyleSheet("""
             QPushButton {
                 background-color: #E5E5EA;
-                color: #1C1C1E;
-                border-radius: 8px;
-                padding: 8px 16px;
+                border-radius: 20px;
                 font-weight: bold;
+                font-size: 20px;
             }
             QPushButton:checked {
                 background-color: #1C1C1E;
-                color: #E5E5EA;
             }
         """)
         self.dark_mode_toggle.clicked.connect(self._toggle_dark_mode)
-        header_layout.addWidget(self.dark_mode_toggle)
         header_layout.addStretch(1)
+        header_layout.addWidget(self.dark_mode_toggle)
 
         main_layout.addLayout(header_layout)
 
@@ -630,8 +629,15 @@ class MainWindow(QMainWindow):
             self.checkout_panel = QDockWidget("", self)
             self.checkout_panel.setAllowedAreas(Qt.DockWidgetArea.RightDockWidgetArea)
             self.checkout_panel.setFeatures(QDockWidget.DockWidgetFeature.NoDockWidgetFeatures)
-            self.checkout_panel.setMinimumWidth(350)
-            self.checkout_panel.setMaximumWidth(400)
+
+            # Responsive width for mobile vs desktop
+            if self.width() <= 480:  # Mobile width threshold
+                panel_width = self.width()  # Full width on mobile
+            else:
+                panel_width = 350  # Default width on desktop
+
+            self.checkout_panel.setMinimumWidth(panel_width)
+            self.checkout_panel.setMaximumWidth(panel_width)
 
             # Panel widget and layout
             panel_widget = QWidget()
@@ -874,12 +880,147 @@ class MainWindow(QMainWindow):
         """
         if self.dark_mode_toggle.isChecked():
             # Dark mode enabled
-            self.setStyleSheet("background-color: #1C1C1E;")  # Dark background
-            self.tab_widget.setStyleSheet(self._dark_mode_tab_style())
+            self.dark_mode_toggle.setText("🌙")
+            self.setStyleSheet("""
+                QWidget {
+                    background-color: #1C1C1E;
+                    color: #FFFFFF;
+                }
+                QTabWidget::pane {
+                    border: 1px solid #444444;
+                    background: #2C2C2E;
+                    border-radius: 12px;
+                    padding: 10px;
+                }
+                QTabBar::tab {
+                    background: #3A3A3C;
+                    color: #FFFFFF;
+                    padding: 10px 20px;
+                    border-top-left-radius: 12px;
+                    border-top-right-radius: 12px;
+                    margin-right: 2px;
+                    font-family: "Inter";
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+                QTabBar::tab:selected {
+                    background: #1C1C1E;
+                    color: #34C759;
+                }
+                QTabBar::tab:hover {
+                    background: #48484A;
+                }
+                QTableWidget {
+                    background-color: #000000;
+                    color: #FFFFFF;
+                    gridline-color: #444444;
+                    border: 1px solid #444444;
+                }
+                QHeaderView::section {
+                    background-color: #2C2C2E;
+                    color: #34C759;
+                    padding: 10px;
+                    border: 1px solid #444444;
+                }
+                QPushButton {
+                    background-color: #3A3A3C;
+                    color: #FFFFFF;
+                    border-radius: 8px;
+                    padding: 8px 16px;
+                    font-weight: bold;
+                }
+                QPushButton:checked {
+                    background-color: #1C1C1E;
+                }
+                QPushButton:hover {
+                    background-color: #48484A;
+                }
+                QLabel {
+                    color: #FFFFFF;
+                }
+                QLineEdit {
+                    background-color: #2C2C2E;
+                    color: #FFFFFF;
+                    border: 1px solid #444444;
+                    border-radius: 8px;
+                    padding: 8px;
+                }
+                QLineEdit:focus {
+                    border: 1px solid #34C759;
+                }
+            """)
         else:
             # Light mode enabled
-            self.setStyleSheet("background-color: #F2F2F7;")  # Light background
-            self.tab_widget.setStyleSheet(self._light_mode_tab_style())
+            self.dark_mode_toggle.setText("☀️")
+            self.setStyleSheet("""
+                QWidget {
+                    background-color: #F2F2F7;
+                    color: #1C1C1E;
+                }
+                QTabWidget::pane {
+                    border: 1px solid #D1D1D6;
+                    background: #FFFFFF;
+                    border-radius: 12px;
+                    padding: 10px;
+                }
+                QTabBar::tab {
+                    background: #F2F2F7;
+                    color: #636366;
+                    padding: 10px 20px;
+                    border-top-left-radius: 12px;
+                    border-top-right-radius: 12px;
+                    margin-right: 2px;
+                    font-family: "Inter";
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+                QTabBar::tab:selected {
+                    background: #FFFFFF;
+                    color: #007AFF;
+                }
+                QTabBar::tab:hover {
+                    background: #E5E5EA;
+                }
+                QTableWidget {
+                    background-color: #FFFFFF;
+                    color: #1C1C1E;
+                    gridline-color: #E5E5EA;
+                    border: 1px solid #E5E5EA;
+                }
+                QHeaderView::section {
+                    background-color: #F2F2F7;
+                    color: #636366;
+                    padding: 10px;
+                    border: 1px solid #D1D1D6;
+                }
+                QPushButton {
+                    background-color: #E5E5EA;
+                    color: #1C1C1E;
+                    border-radius: 8px;
+                    padding: 8px 16px;
+                    font-weight: bold;
+                }
+                QPushButton:checked {
+                    background-color: #1C1C1E;
+                    color: #E5E5EA;
+                }
+                QPushButton:hover {
+                    background-color: #D1D1D6;
+                }
+                QLabel {
+                    color: #1C1C1E;
+                }
+                QLineEdit {
+                    background-color: #FFFFFF;
+                    color: #1C1C1E;
+                    border: 1px solid #D1D1D6;
+                    border-radius: 8px;
+                    padding: 8px;
+                }
+                QLineEdit:focus {
+                    border: 1px solid #007AFF;
+                }
+            """)
 
     def _dark_mode_tab_style(self):
         """

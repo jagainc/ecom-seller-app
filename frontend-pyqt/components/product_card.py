@@ -22,21 +22,21 @@ class ProductCard(QWidget):
         self.product_data = product_data
         self.quantity = 1
 
+        self.setFixedSize(320, 600)
+
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(12, 12, 12, 12)
-        layout.setSpacing(8)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(20)
 
         # Product Image - This is where the product image is attached to the card
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.image_label.setFixedSize(260, 200)  # Increased size for bigger product image
-        # Styling for image container: light background with rounded corners to match design
+        self.image_label.setFixedSize(280, 350)  # Adjusted size for better fit in card
         self.image_label.setStyleSheet("""
-            border: none; 
-            background: #F8F8F8; 
-            border-radius: 16px;
+            border: none;
+            border-radius: 12px;
         """)
-        # Load product image from product_data or default path
+        
         pixmap = QPixmap(product_data.get('image_path', f"assets/images/product_{product_data['id']}.jpg"))
         if pixmap.isNull():
             self.image_label.setText("")
@@ -46,116 +46,99 @@ class ProductCard(QWidget):
                                                     Qt.TransformationMode.SmoothTransformation))
         layout.addWidget(self.image_label, alignment=Qt.AlignmentFlag.AlignCenter)
 
-        # Product Name (centered, smaller)
+        # Product Name (centered, bold)
         self.name_label = QLabel(product_data.get('name', 'Unknown Product'))
-        self.name_label.setFont(QFont("Inter", 11, QFont.Weight.DemiBold))  # Slightly larger and lighter weight for modern look
-        self.name_label.setStyleSheet("color: #1C1C1E;")  # Darker text color for better contrast
+        self.name_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.name_label.setStyleSheet("color: #3B1F1F; background: transparent;")
         self.name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.name_label.setWordWrap(True)
         layout.addWidget(self.name_label, alignment=Qt.AlignmentFlag.AlignCenter)
 
-        # Brand (if available)
-        brand = product_data.get('brand', '')
-        if brand:
-            self.brand_label = QLabel(brand)
-            self.brand_label.setFont(QFont("Inter", 9))
-            self.brand_label.setStyleSheet("color: #444;")  # Slightly darker for better readability
-            self.brand_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            layout.addWidget(self.brand_label, alignment=Qt.AlignmentFlag.AlignCenter)
+        # Price and Add to Cart layout
+        price_cart_layout = QHBoxLayout()
+        price_cart_layout.setContentsMargins(0, 0, 0, 0)
+        price_cart_layout.setSpacing(15)
 
-        # Product Price (centered, green)
-        self.price_label = QLabel(f"Rs {product_data.get('price', 0.00):.0f}")
-        self.price_label.setFont(QFont("Inter", 12, QFont.Weight.Bold))  # Slightly larger font for emphasis
-        self.price_label.setStyleSheet("color: #1BA94C; margin-top: 4px;")  # Green color with margin for spacing
-        self.price_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.price_label, alignment=Qt.AlignmentFlag.AlignCenter)
+        # Product Price (bold, dark)
+        self.price_label = QLabel(f"${product_data.get('price', 0.00):.2f}")
+        self.price_label.setFont(QFont("Inter", 14, QFont.Weight.Bold))
+        self.price_label.setStyleSheet("color: #3B1F1F; background: transparent;")
+        self.price_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        price_cart_layout.addWidget(self.price_label, alignment=Qt.AlignmentFlag.AlignLeft)
 
-        # Quantity controls
-        qty_layout = QHBoxLayout()
-        qty_layout.setSpacing(8)  # More spacing for better balance
-        self.minus_btn = QPushButton("−")
-        self.minus_btn.setFixedWidth(30)
-        self.minus_btn.setStyleSheet("""
-            background: #F2F2F2; 
-            border: none; 
-            font-size: 18px; 
-            color: black;
-            border-radius: 4px;
-            min-height: 28px;
-            min-width: 28px;
-            """)  # Rounded buttons with subtle styling
-        self.minus_btn.clicked.connect(self.decrease_qty)
-        qty_layout.addWidget(self.minus_btn)
-
-        self.qty_label = QLabel(str(self.quantity))
-        self.qty_label.setFixedWidth(28)
-        self.qty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.qty_label.setStyleSheet("color: black; font-weight: 700; font-size: 16px;")  # Bolder and larger for emphasis
-        qty_layout.addWidget(self.qty_label)
-
-        self.plus_btn = QPushButton("+")
-        self.plus_btn.setFixedWidth(30)
-        self.plus_btn.setStyleSheet("""
-            background: #F2F2F2; 
-            border: none; 
-            font-size: 18px; 
-            color: black;
-            border-radius: 4px;
-            min-height: 28px;
-            min-width: 28px;
-            """)  # Rounded buttons with subtle styling
-        self.plus_btn.clicked.connect(self.increase_qty)
-        qty_layout.addWidget(self.plus_btn)
-
-        layout.addLayout(qty_layout)
-
-        # Add to Cart Button
-        self.add_to_cart_button = QPushButton("Add to Cart")
-        self.add_to_cart_button.setFont(QFont("Inter", 9, QFont.Weight.DemiBold))  # Smaller font size
-        self.add_to_cart_button.setFixedHeight(28)  # Smaller height for compact button
+        # Add to Cart Button (white background, border, rounded corners)
+        self.add_to_cart_button = QPushButton("ADD TO CART")
+        self.add_to_cart_button.setFont(QFont("Inter", 10, QFont.Weight.DemiBold))
+        self.add_to_cart_button.setFixedHeight(36)
         self.add_to_cart_button.setStyleSheet("""
             QPushButton {
-                background-color: #1BA94C;
-                color: white;
-                padding: 4px 12px;
-                border-radius: 6px;
-                border: none;
-                min-width: 100px;
-                font-weight: 600;
-                letter-spacing: 0.5px;
+                background-color: white;
+                color: #3B1F1F;
+                border: 1.5px solid #3B1F1F;
+                border-radius: 8px;
+                padding: 8px 20px;
+                letter-spacing: 1px;
             }
             QPushButton:hover {
-                background-color: #168C3B;
+                background-color: #f0f0f0;
             }
         """)
-        layout.addWidget(self.add_to_cart_button, alignment=Qt.AlignmentFlag.AlignCenter)
         self.add_to_cart_button.clicked.connect(self.emit_add_to_cart)
+        price_cart_layout.addWidget(self.add_to_cart_button, alignment=Qt.AlignmentFlag.AlignRight)
+
+        layout.addLayout(price_cart_layout)
 
         layout.addStretch(1)
 
         # Card shadow and rounded corners
         self.setMouseTracking(True)
         self._shadow = QGraphicsDropShadowEffect(self)
-        self._shadow.setBlurRadius(18)
-        self._shadow.setOffset(0, 2)
-        self._shadow.setColor(QColor(0, 0, 0, 30))
+        self._shadow.setBlurRadius(20)
+        self._shadow.setOffset(0, 4)
+        self._shadow.setColor(QColor(0, 0, 0, 40))
         self.setGraphicsEffect(self._shadow)
         self._shadow.setEnabled(False)
         self._scale_anim = QPropertyAnimation(self, b"geometry")
-        self._scale_anim.setDuration(160)
+        self._scale_anim.setDuration(200)
         self._scale_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
 
-        # Set the initial style (no blue border, subtle box look)
+        # Set the initial style for the card background and rounded corners
         self.setStyleSheet("""
             QWidget {
-                background: transparent;
-                border-radius: 0;
+                background: white;
+                border-radius: 16px;
                 border: none;
             }
             QWidget:hover {
-                background: transparent;
+                background: white;
             }
         """)
+
+    def emit_add_to_cart(self):
+        """
+        Emits the add_to_cart_requested signal with the product data and current quantity.
+        """
+        self.add_to_cart_requested.emit(self.product_data, self.quantity)
+
+    def enterEvent(self, event):
+        # Enable shadow and animate scale up
+        self._shadow.setEnabled(True)
+        rect = self.geometry()
+        self._scale_anim.stop()
+        self._scale_anim.setStartValue(rect)
+        self._scale_anim.setEndValue(QRect(rect.x()-4, rect.y()-4, rect.width()+8, rect.height()+8))
+        self._scale_anim.start()
+        super().enterEvent(event)
+
+    def leaveEvent(self, event):
+        # Disable shadow and animate scale down
+        rect = self.geometry()
+        self._scale_anim.stop()
+        self._scale_anim.setStartValue(rect)
+        self._scale_anim.setEndValue(QRect(rect.x()+4, rect.y()+4, rect.width()-8, rect.height()-8))
+        self._scale_anim.start()
+        self._shadow.setEnabled(False)
+        super().leaveEvent(event)
 
     def increase_qty(self):
         """
@@ -197,4 +180,7 @@ class ProductCard(QWidget):
         self._scale_anim.start()
         self._shadow.setEnabled(False)
         super().leaveEvent(event)
+        self.name_label.setStyleSheet("color: #3B1F1F; background: transparent;")
+        self.price_label.setStyleSheet("color: #3B1F1F; background: transparent;")
+
 

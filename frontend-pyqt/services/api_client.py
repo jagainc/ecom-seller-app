@@ -33,7 +33,8 @@ class ApiClient:
                 "name": f"Product {i}",
                 "price": round(random.uniform(10.0, 500.0), 2),
                 "stock": random.randint(0, 200),
-                "description": f"Description for product {i}."
+                "description": f"Description for product {i}.",
+                "image_path": f"assets/icons/product_{100 + i}.png"
             })
         return products
 
