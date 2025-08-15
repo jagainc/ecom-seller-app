@@ -1,5 +1,22 @@
 import time
 import random
+import logging
+from typing import Dict, List, Optional, Any
+from dataclasses import dataclass
+
+@dataclass
+class ApiResponse:
+    """Standardized API response structure"""
+    success: bool
+    data: Any = None
+    error: str = ""
+    status_code: int = 200
+
+class ApiException(Exception):
+    """Custom exception for API errors"""
+    def __init__(self, message: str, status_code: int = 500):
+        super().__init__(message)
+        self.status_code = status_code
 
 class ApiClient:
     """
@@ -8,15 +25,17 @@ class ApiClient:
     to the Spring Boot backend (e.g., using 'requests' library).
     For demonstration purposes, it returns static/simulated data.
     """
-    def __init__(self, base_url="http://localhost:8080/api"):
+    def __init__(self, base_url="http://localhost:8080/api", timeout=30):
         """
         Initializes the ApiClient.
 
         Args:
             base_url (str): The base URL of the Spring Boot backend API.
-                            (Currently not used as data is simulated).
+            timeout (int): Request timeout in seconds.
         """
         self.base_url = base_url
+        self.timeout = timeout
+        self.logger = logging.getLogger(__name__)
         self._products_data = self._generate_simulated_products()
         self._orders_data = self._generate_simulated_orders()
 
@@ -76,9 +95,30 @@ class ApiClient:
         """
         Simulates fetching a list of products.
         Corresponds to ProductController in backend.
+        
+        Returns the products list directly for backward compatibility.
+        In a real implementation, this would return ApiResponse.
         """
-        self._simulate_delay()
-        return self._products_data
+        try:
+            self._simulate_delay()
+            self.logger.info("Fetching products")
+            return self._products_data
+        except Exception as e:
+            self.logger.error(f"Error fetching products: {e}")
+            raise ApiException(f"Failed to fetch products: {e}")
+    
+    def get_products_response(self) -> ApiResponse:
+        """
+        Returns products with full ApiResponse structure.
+        Use this for new code that handles ApiResponse properly.
+        """
+        try:
+            self._simulate_delay()
+            self.logger.info("Fetching products")
+            return ApiResponse(success=True, data=self._products_data)
+        except Exception as e:
+            self.logger.error(f"Error fetching products: {e}")
+            return ApiResponse(success=False, error=str(e))
 
     def get_product_by_id(self, product_id):
         """
